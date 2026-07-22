@@ -1,0 +1,20 @@
+@if (message(); as msg) {
+  <article class="detail">
+    <header>
+      <h1>{{ msg.subject }}</h1>
+      <div class="meta">
+        <span class="avatar" aria-hidden="true">{{ msg.from.emailAddress.name.charAt(0) }}</span>
+        <div class="who">
+          <span class="name">{{ msg.from.emailAddress.name }}</span>
+          <span class="address">{{ msg.from.emailAddress.address }}</span>
+        </div>
+        <span class="received">{{ msg.receivedDateTime | date: 'EEE d MMM y, HH:mm' }}</span>
+      </div>
+    </header>
+    <pre class="body">{{ msg.body.content }}</pre>
+  </article>
+} @else {
+  <div class="empty">
+    <p>Select an email to read it and get reply suggestions.</p>
+  </div>
+}

@@ -1,0 +1,54 @@
+// Material theme built from the local package so the app works fully
+// offline. No Google Fonts CDN for the same reason: Roboto is requested
+// with a system-font fallback chain that looks fine without it.
+@use '@angular/material' as mat;
+
+html {
+  color-scheme: light;
+  @include mat.theme((
+    color: mat.$azure-palette,
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family: Roboto, 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+// Shared skeleton shimmer, used by the list and AI panes.
+.skeleton {
+  display: block;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--mat-sys-surface-container-high) 25%,
+    var(--mat-sys-surface-container) 50%,
+    var(--mat-sys-surface-container-high) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.skeleton.line { height: 12px; }
+.skeleton.bar { height: 6px; }
+.skeleton.w40 { width: 40%; }
+.skeleton.w60 { width: 60%; }
+.skeleton.w80 { width: 80%; }
+.skeleton.w90 { width: 90%; }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; }
+}

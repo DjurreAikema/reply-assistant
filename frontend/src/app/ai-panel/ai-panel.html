@@ -1,0 +1,91 @@
+@if (!message()) {
+  <div class="empty">
+    <p>Suggestions appear here when an email is selected.</p>
+  </div>
+} @else if (phase() === 'sent') {
+  <div class="sent-state">
+    <span class="check" aria-hidden="true">&#10003;</span>
+    <h2>Reply sent</h2>
+    <p>This conversation is marked as replied.</p>
+  </div>
+} @else {
+  <div class="panel">
+    <h2 class="panel-title">Suggested replies</h2>
+
+    @if (error(); as msg) {
+      <div class="error" role="alert">{{ msg }}</div>
+    }
+
+    @if (phase() === 'suggesting') {
+      <div aria-hidden="true">
+        @for (i of [1, 2, 3]; track i) {
+          <div class="card skeleton-card">
+            <span class="skeleton line w60"></span>
+            <span class="skeleton bar"></span>
+            <span class="skeleton line w80"></span>
+          </div>
+        }
+      </div>
+      <p class="hint">Matching templates to this email&hellip;</p>
+    }
+
+    @for (candidate of candidates(); track candidate.template_id; let first = $first) {
+      <div
+        matRipple
+        class="card"
+        role="button"
+        tabindex="0"
+        [class.expanded]="first || candidate.template_id === selectedTemplateId()"
+        [class.active]="candidate.template_id === selectedTemplateId()"
+        (click)="pick(candidate)"
+        (keydown.enter)="pick(candidate)"
+      >
+        <div class="card-top">
+          <span class="tpl-name">{{ candidate.template_name }}</span>
+          <span class="pct">{{ confidencePercent(candidate) }}%</span>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="confidencePercent(candidate)" />
+        @if (first || candidate.template_id === selectedTemplateId()) {
+          <p class="reason">{{ candidate.reason }}</p>
+        }
+        @if (candidate.template_id === selectedTemplateId() && phase() === 'drafting') {
+          <mat-progress-bar mode="indeterminate" class="drafting-bar" />
+        }
+      </div>
+    }
+
+    @if (phase() === 'drafting') {
+      <div class="card skeleton-card" aria-hidden="true">
+        <span class="skeleton line w80"></span>
+        <span class="skeleton line w90"></span>
+        <span class="skeleton line w60"></span>
+        <span class="skeleton line w80"></span>
+      </div>
+    }
+
+    @if (phase() === 'drafted' || phase() === 'sending') {
+      <div class="draft-area">
+        <h3>Draft</h3>
+        <textarea
+          [(ngModel)]="draft"
+          rows="14"
+          aria-label="Reply draft"
+          [disabled]="phase() === 'sending'"
+        ></textarea>
+        <p class="placeholder-hint">
+          <!-- ngNonBindable because Angular decodes entities before parsing,
+               so escaped braces would still become an interpolation. -->
+          Text in double braces like <span ngNonBindable>{{agent_name}}</span> still needs filling in by hand.
+        </p>
+        <button
+          matButton="filled"
+          class="send-btn"
+          [disabled]="phase() === 'sending' || !draft().trim()"
+          (click)="send()"
+        >
+          {{ phase() === 'sending' ? 'Sending\u2026' : 'Send reply' }}
+        </button>
+      </div>
+    }
+  </div>
+}

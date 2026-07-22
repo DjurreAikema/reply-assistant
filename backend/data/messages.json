@@ -1,0 +1,230 @@
+[
+  {
+    "id": "msg-001",
+    "conversationId": "conv-001",
+    "from": {
+      "emailAddress": {
+        "name": "Sandra Willems",
+        "address": "s.willems84@gmail.com"
+      }
+    },
+    "subject": "WHERE IS MY PACKAGE order #88213",
+    "bodyPreview": "I ordered on the 2nd and the site said 2-3 business days. It has now been ELEVEN days...",
+    "body": {
+      "contentType": "text",
+      "content": "I ordered on the 2nd and the site said 2-3 business days. It has now been ELEVEN days and nothing. No package, no update, no email, nothing.\n\nI paid for standard shipping which your own website says is 2-3 business days. I understand delays happen but eleven days with zero communication is honestly ridiculous. I needed this for my daughters birthday which has now passed, so thanks for that.\n\nOrder number is 88213, tracking says NL-4471-88213-B.\n\nI want to know exactly where my package is and when it will arrive. If you cant tell me that I want my money back.\n\nSandra"
+    },
+    "receivedDateTime": "2026-07-21T08:14:22Z",
+    "isRead": false,
+    "isReplied": false
+  },
+  {
+    "id": "msg-002",
+    "conversationId": "conv-002",
+    "from": {
+      "emailAddress": {
+        "name": "Tom Verstappen",
+        "address": "tomverstappen@outlook.com"
+      }
+    },
+    "subject": "you shipped to my OLD address",
+    "bodyPreview": "I moved 3 months ago and updated my address in my account settings...",
+    "body": {
+      "contentType": "text",
+      "content": "I moved 3 months ago and updated my address in my account settings. I just got the shipping confirmation for order 90455 and its going to Beukenlaan 12 which is my OLD address. I now live at Vondelstraat 88, 2e verdieping.\n\nCan you redirect it?? The people living there now are not going to bring it to me, I dont even know them.\n\nPlease fix this before it gets delivered, the tracking says its at the depot now. tracking: NL-3390-90455-A\n\nTom"
+    },
+    "receivedDateTime": "2026-07-21T07:02:10Z",
+    "isRead": false,
+    "isReplied": false
+  },
+  {
+    "id": "msg-003",
+    "conversationId": "conv-003",
+    "from": {
+      "emailAddress": {
+        "name": "Anneke de Groot",
+        "address": "anneke.degroot@ziggo.nl"
+      }
+    },
+    "subject": "Box arrived completely crushed",
+    "bodyPreview": "The parcel that came today looks like it was run over by the van...",
+    "body": {
+      "contentType": "text",
+      "content": "Hello,\n\nThe parcel that came today looks like it was run over by the van. The box was crushed on one side and when I opened it the ceramic vase inside was in about 20 pieces. I have photos of the box and the broken vase if you need them.\n\nThe order number is 87901. The other item in the box (the table runner) is fine.\n\nI would like a replacement vase please, not a refund, it was a gift.\n\nKind regards,\nAnneke de Groot"
+    },
+    "receivedDateTime": "2026-07-20T16:45:03Z",
+    "isRead": true,
+    "isReplied": false
+  },
+  {
+    "id": "msg-004",
+    "conversationId": "conv-004",
+    "from": {
+      "emailAddress": {
+        "name": "Marco Bianchi",
+        "address": "marco.bianchi.milano@gmail.com"
+      }
+    },
+    "subject": "package stuck in customs for 2 weeks??",
+    "bodyPreview": "my tracking has said 'held at customs' since the 8th of july...",
+    "body": {
+      "contentType": "text",
+      "content": "hi, my tracking has said \"held at customs\" since the 8th of july. order 89114, shipping to Milan Italy. tracking IT-2210-89114-C\n\ndo i need to pay something? fill in a form? nobody contacted me. ive read online that sometimes customs wants an invoice or payment of duties but i have received no letter and no email.\n\nplease tell me what is happening and what i need to do, i dont want it sent back.\n\nmarco"
+    },
+    "receivedDateTime": "2026-07-20T14:22:41Z",
+    "isRead": false,
+    "isReplied": false
+  },
+  {
+    "id": "msg-005",
+    "conversationId": "conv-005",
+    "from": {
+      "emailAddress": {
+        "name": "Fatima el Amrani",
+        "address": "f.elamrani@hotmail.com"
+      }
+    },
+    "subject": "Missing item from order 91002",
+    "bodyPreview": "I ordered 4 things and only 3 were in the box...",
+    "body": {
+      "contentType": "text",
+      "content": "Hi,\n\nI ordered 4 things and only 3 were in the box. The packing slip lists all 4 items but the desk lamp (item 3 on the slip) was not inside. The box was sealed and undamaged so I dont think it fell out, I think it was never packed.\n\nOrder 91002. I got: the notebook set, the pen holder, the mouse pad. Missing: the desk lamp.\n\nCan you send the lamp? I already waited a week for this delivery.\n\nThanks, Fatima"
+    },
+    "receivedDateTime": "2026-07-20T11:08:55Z",
+    "isRead": false,
+    "isReplied": false
+  },
+  {
+    "id": "msg-006",
+    "conversationId": "conv-006",
+    "from": {
+      "emailAddress": {
+        "name": "Piet Jansen",
+        "address": "pietjansen1958@kpnmail.nl"
+      }
+    },
+    "subject": "refund",
+    "bodyPreview": "I want a refund for order 86770. The item arrived 3 weeks late...",
+    "body": {
+      "contentType": "text",
+      "content": "I want a refund for order 86770. The item arrived 3 weeks late and by then I had already bought it in a shop. I sent it back last tuesday with the return label, track and trace of the return is NL-RTN-86770-X and it shows delivered to your warehouse on friday.\n\nWhen do I get my money? It was 64,95.\n\nP. Jansen"
+    },
+    "receivedDateTime": "2026-07-19T19:30:12Z",
+    "isRead": true,
+    "isReplied": false
+  },
+  {
+    "id": "msg-007",
+    "conversationId": "conv-007",
+    "from": {
+      "emailAddress": {
+        "name": "Chloe Martin",
+        "address": "chloe.martin.lyon@gmail.com"
+      }
+    },
+    "subject": "Tracking number does nothing",
+    "bodyPreview": "The tracking number FR-5521-92230-D you emailed me shows no information at all...",
+    "body": {
+      "contentType": "text",
+      "content": "Hello,\n\nThe tracking number FR-5521-92230-D you emailed me shows no information at all. Your tracking page just says \"label created\" and it has said that for 6 days now. Has the package actually been shipped or did someone just print a label?\n\nOrder 92230, placed July 12th.\n\nIf it has not shipped yet please just tell me honestly, I can plan around a delay but not around silence.\n\nChloe"
+    },
+    "receivedDateTime": "2026-07-19T15:12:33Z",
+    "isRead": false,
+    "isReplied": false
+  },
+  {
+    "id": "msg-008",
+    "conversationId": "conv-008",
+    "from": {
+      "emailAddress": {
+        "name": "Jeroen Bakker",
+        "address": "j.bakker.utrecht@gmail.com"
+      }
+    },
+    "subject": "missed delivery while at work, no note",
+    "bodyPreview": "Apparently the driver tried to deliver yesterday at 14:20...",
+    "body": {
+      "contentType": "text",
+      "content": "Apparently the driver tried to deliver yesterday at 14:20. I was at work, like most people are at 14:20 on a tuesday. There was no note in my mailbox and no option in the app to pick a pickup point or a new time slot, the tracking just says \"delivery attempted\" and nothing else.\n\nOrder 90871, tracking NL-6612-90871-A.\n\nHow do I get this package now? Is it at a pickup point somewhere? Will they try again? I dont want it going back to you after 2 attempts because I cant control when the driver comes.\n\nJeroen"
+    },
+    "receivedDateTime": "2026-07-19T09:41:27Z",
+    "isRead": false,
+    "isReplied": false
+  },
+  {
+    "id": "msg-009",
+    "conversationId": "conv-009",
+    "from": {
+      "emailAddress": {
+        "name": "Ingrid Svensson",
+        "address": "ingrid.svensson@telia.se"
+      }
+    },
+    "subject": "Slow delivery AND wrong item??",
+    "bodyPreview": "First the package took 12 days to arrive in Stockholm. Then when I open it...",
+    "body": {
+      "contentType": "text",
+      "content": "First the package took 12 days to arrive in Stockholm. Then when I open it, its not even my order. I ordered a green raincoat size M (order 89660) and inside is some kind of car phone holder?? The label on the box has my name and address but the contents are for someone else obviously.\n\nSo now what. Do I send this back? Do you send my actual coat? How long will THAT take, another 12 days?\n\nI am honestly quite fed up. This was my first order with you and probably my last.\n\nIngrid Svensson"
+    },
+    "receivedDateTime": "2026-07-18T17:55:48Z",
+    "isRead": true,
+    "isReplied": false
+  },
+  {
+    "id": "msg-010",
+    "conversationId": "conv-010",
+    "from": {
+      "emailAddress": {
+        "name": "Dave Thompson",
+        "address": "davethompson.leeds@yahoo.co.uk"
+      }
+    },
+    "subject": "parcel soaked through",
+    "bodyPreview": "found my parcel on the doorstep in the rain, driver didnt even ring the bell...",
+    "body": {
+      "contentType": "text",
+      "content": "found my parcel on the doorstep in the rain, driver didnt even ring the bell. box was soaked through and the books inside (3 hardbacks, order 91388) are water damaged, pages all wavy. was home the entire time.\n\nwant replacements sending. and maybe tell your drivers doorbells exist.\n\ndave"
+    },
+    "receivedDateTime": "2026-07-18T13:20:15Z",
+    "isRead": false,
+    "isReplied": false
+  },
+  {
+    "id": "msg-011",
+    "conversationId": "conv-011",
+    "from": {
+      "emailAddress": {
+        "name": "Lotte van Dijk",
+        "address": "lottevd92@gmail.com"
+      }
+    },
+    "subject": "question",
+    "bodyPreview": "Hi, do you also sell gift cards? I looked on the website but couldn't find them...",
+    "body": {
+      "contentType": "text",
+      "content": "Hi, do you also sell gift cards? I looked on the website but couldnt find them. My sister loves your shop and her birthday is coming up. Also is it possible to add gift wrapping to an order?\n\nThanks!\nLotte"
+    },
+    "receivedDateTime": "2026-07-18T10:03:59Z",
+    "isRead": true,
+    "isReplied": false
+  },
+  {
+    "id": "msg-012",
+    "conversationId": "conv-012",
+    "from": {
+      "emailAddress": {
+        "name": "R. Osei",
+        "address": "r.osei.contact@gmail.com"
+      }
+    },
+    "subject": "problem",
+    "bodyPreview": "hi there is a problem with my order can someone contact me...",
+    "body": {
+      "contentType": "text",
+      "content": "hi there is a problem with my order can someone contact me\n\nthanks"
+    },
+    "receivedDateTime": "2026-07-17T20:47:31Z",
+    "isRead": false,
+    "isReplied": false
+  }
+]

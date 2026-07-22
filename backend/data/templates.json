@@ -1,0 +1,72 @@
+[
+  {
+    "id": "tpl-delayed",
+    "name": "Delayed shipment apology",
+    "description": "Order has taken longer than the promised delivery window and the customer is asking where it is.",
+    "body": "Dear {{customer_name}},\n\nThank you for reaching out, and I am sorry your order has taken longer than the delivery window we promised. That is not the experience we want you to have.\n\nI have checked tracking number {{tracking_number}} and escalated your shipment with our carrier. You will receive an updated delivery estimate within {{response_window}}.\n\nIf the package does not arrive by the new estimate, we will offer you a full refund or a free replacement, whichever you prefer.\n\nKind regards,\n{{agent_name}}\nCustomer Service",
+    "placeholders": ["customer_name", "tracking_number", "response_window", "agent_name"]
+  },
+  {
+    "id": "tpl-wrong-address",
+    "name": "Wrong delivery address",
+    "description": "Package is on its way to an incorrect or outdated address and the customer wants it redirected.",
+    "body": "Dear {{customer_name}},\n\nThank you for flagging this so quickly. I understand your order is on its way to an address that is no longer correct.\n\nI have submitted a redirect request to the carrier for tracking number {{tracking_number}} with the corrected address:\n\n{{corrected_address}}\n\nRedirects succeed in most cases when the parcel has not yet left the regional depot. I will confirm within {{response_window}} whether the redirect was accepted. If it cannot be redirected, we will arrange a replacement shipment to the correct address at no cost to you.\n\nKind regards,\n{{agent_name}}\nCustomer Service",
+    "placeholders": ["customer_name", "tracking_number", "corrected_address", "response_window", "agent_name"]
+  },
+  {
+    "id": "tpl-damaged",
+    "name": "Damaged on arrival",
+    "description": "Item arrived broken, crushed, wet, or otherwise damaged in transit.",
+    "body": "Dear {{customer_name}},\n\nI am very sorry to hear your order arrived damaged. That should never happen, and I appreciate you letting us know.\n\nWe will send a replacement for the damaged item(s) right away. There is no need to return the damaged goods. If you have photos of the damage, replying with them helps us file a claim with the carrier, but it will not delay your replacement.\n\nYour replacement for order {{order_number}} will ship within {{response_window}}, and you will receive a new tracking number by email.\n\nKind regards,\n{{agent_name}}\nCustomer Service",
+    "placeholders": ["customer_name", "order_number", "response_window", "agent_name"]
+  },
+  {
+    "id": "tpl-customs",
+    "name": "Customs hold explanation",
+    "description": "International shipment is held at customs and the customer wants to know why and what to do.",
+    "body": "Dear {{customer_name}},\n\nThank you for your patience. I can see that your shipment with tracking number {{tracking_number}} is currently held at customs in the destination country.\n\nThis is usually routine and resolves without any action from you. In some cases the customs authority requires payment of import duties or extra documentation, and they will contact you directly by letter, email, or a card in your mailbox if so.\n\nWe have contacted the carrier for a status update and will get back to you within {{response_window}}. You do not need to pay anything to us, and please be cautious of messages asking for payment through unofficial links.\n\nKind regards,\n{{agent_name}}\nCustomer Service",
+    "placeholders": ["customer_name", "tracking_number", "response_window", "agent_name"]
+  },
+  {
+    "id": "tpl-missing-item",
+    "name": "Missing item from order",
+    "description": "One or more items from a multi-item order were not in the delivered package.",
+    "body": "Dear {{customer_name}},\n\nThank you for letting us know that part of your order was missing from the package. I am sorry for the inconvenience.\n\nI have checked order {{order_number}} and confirmed the missing item: {{missing_item}}. We will ship it to you separately at no extra cost. You will receive a tracking number within {{response_window}}.\n\nYou do not need to return anything or take any further steps.\n\nKind regards,\n{{agent_name}}\nCustomer Service",
+    "placeholders": ["customer_name", "order_number", "missing_item", "response_window", "agent_name"]
+  },
+  {
+    "id": "tpl-refund",
+    "name": "Refund confirmation",
+    "description": "Customer requests a refund, often after a return has already been received.",
+    "body": "Dear {{customer_name}},\n\nThank you for your message about the refund for order {{order_number}}.\n\nI have confirmed your request and initiated the refund of {{refund_amount}} to your original payment method. Refunds typically appear on your statement within 5 to 10 business days, depending on your bank.\n\nYou will receive a confirmation email once the refund has been processed on our side.\n\nKind regards,\n{{agent_name}}\nCustomer Service",
+    "placeholders": ["customer_name", "order_number", "refund_amount", "agent_name"]
+  },
+  {
+    "id": "tpl-tracking-stuck",
+    "name": "Tracking not updating",
+    "description": "Tracking shows no movement, is stuck on label created, or shows no information at all.",
+    "body": "Dear {{customer_name}},\n\nThank you for reaching out about tracking number {{tracking_number}}. I understand it has not shown any updates, and I am sorry for the uncertainty that causes.\n\nTracking sometimes lags behind the actual movement of a parcel, but a status that has not changed for several days deserves a proper check. I have asked the carrier to investigate where your shipment currently is.\n\nI will send you a concrete update within {{response_window}}. If the carrier cannot locate the parcel, we will ship a replacement or refund you in full, whichever you prefer.\n\nKind regards,\n{{agent_name}}\nCustomer Service",
+    "placeholders": ["customer_name", "tracking_number", "response_window", "agent_name"]
+  },
+  {
+    "id": "tpl-missed-delivery",
+    "name": "Missed delivery attempt",
+    "description": "Driver attempted delivery while the customer was out, and the customer wants to know how to receive the package.",
+    "body": "Dear {{customer_name}},\n\nThank you for your message. I am sorry the delivery attempt was inconvenient and that you were not left clear instructions.\n\nI have checked tracking number {{tracking_number}}. {{next_step}}\n\nIf a second attempt is missed, parcels are held at the nearest pickup point for 7 days before being returned, so there is no immediate risk of it being sent back.\n\nKind regards,\n{{agent_name}}\nCustomer Service",
+    "placeholders": ["customer_name", "tracking_number", "next_step", "agent_name"]
+  },
+  {
+    "id": "tpl-wrong-item",
+    "name": "Wrong item received",
+    "description": "Customer received an item that does not match what they ordered.",
+    "body": "Dear {{customer_name}},\n\nI am sorry to hear you received the wrong item instead of what you ordered. That is our mistake and we will put it right.\n\nWe will ship the correct item from order {{order_number}} immediately, with priority handling. A prepaid return label for the incorrect item is attached; simply drop it at any parcel point at your convenience. Your replacement will not wait for the return.\n\nYou will receive a new tracking number within {{response_window}}.\n\nKind regards,\n{{agent_name}}\nCustomer Service",
+    "placeholders": ["customer_name", "order_number", "response_window", "agent_name"]
+  },
+  {
+    "id": "tpl-general",
+    "name": "General inquiry acknowledgement",
+    "description": "Fallback for questions that do not match a delivery problem, or messages without enough detail to act on.",
+    "body": "Dear {{customer_name}},\n\nThank you for contacting us.\n\nTo help you as quickly as possible, could you share a few more details? Your order number and a short description of the issue are usually enough for us to look into it right away.\n\nWe aim to respond within {{response_window}} once we have that information.\n\nKind regards,\n{{agent_name}}\nCustomer Service",
+    "placeholders": ["customer_name", "response_window", "agent_name"]
+  }
+]
