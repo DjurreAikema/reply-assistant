@@ -1,0 +1,77 @@
+<section class="review" aria-label="Extracted fields">
+  <div class="review-head">
+    <h2 class="review-title">Extracted fields</h2>
+    <p class="review-hint">Pulled from this email by the AI. Check, fix, fill.</p>
+  </div>
+
+  <div class="grid">
+    @for (field of primary(); track field.key) {
+      <div class="field" [class.missing]="!field.value.trim()">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="ff">
+          <mat-label>{{ label(field.key) }}</mat-label>
+          <input
+            matInput
+            [ngModel]="field.value"
+            (ngModelChange)="fieldChange.emit({ key: field.key, value: $event })"
+            [attr.aria-label]="label(field.key)"
+          />
+        </mat-form-field>
+        <div class="meta">
+          @if (field.value.trim()) {
+            <span
+              class="conf"
+              [class]="band(field)"
+              matTooltip="How sure the model is about this value"
+            >
+              <span class="dot" aria-hidden="true"></span>{{ confidencePercent(field) }}%
+            </span>
+            @if (field.source_span) {
+              <button
+                type="button"
+                class="span-toggle"
+                [matTooltip]="'From the email: “' + field.source_span + '”'"
+                (click)="toggleSpan(field.key)"
+              >
+                {{ expandedKey() === field.key ? 'hide source' : 'source' }}
+              </button>
+            }
+          } @else {
+            <span class="needs-input">Needs input</span>
+          }
+        </div>
+        @if (expandedKey() === field.key && field.source_span) {
+          <blockquote class="span-quote">&ldquo;{{ field.source_span }}&rdquo;</blockquote>
+        }
+      </div>
+    }
+  </div>
+
+  @if (unused().length) {
+    <button type="button" class="unused-toggle" (click)="showUnused.set(!showUnused())">
+      {{ showUnused() ? 'Hide' : 'Show' }} {{ unused().length }} field{{
+        unused().length === 1 ? '' : 's'
+      }}
+      not found in this email
+    </button>
+    @if (showUnused()) {
+      <div class="grid unused-grid">
+        @for (field of unused(); track field.key) {
+          <div class="field">
+            <mat-form-field appearance="outline" subscriptSizing="dynamic" class="ff">
+              <mat-label>{{ label(field.key) }}</mat-label>
+              <input
+                matInput
+                [ngModel]="field.value"
+                (ngModelChange)="fieldChange.emit({ key: field.key, value: $event })"
+                [attr.aria-label]="label(field.key)"
+              />
+            </mat-form-field>
+            <div class="meta">
+              <span class="none">not needed by the suggested templates</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</section>

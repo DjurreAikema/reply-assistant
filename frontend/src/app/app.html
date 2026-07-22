@@ -1,22 +1,11 @@
 <mat-toolbar class="topbar">
   <span class="brand">Reply Assistant</span>
   <span class="tagline">Package delivery support</span>
+  <span class="spacer"></span>
+  <nav class="nav" aria-label="Pages">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inbox</a>
+    <a routerLink="/templates" routerLinkActive="active">Templates</a>
+  </nav>
 </mat-toolbar>
 
-<main class="panes">
-  <section class="pane pane-list" aria-label="Inbox">
-    <app-message-list
-      [messages]="messages()"
-      [selectedId]="selected()?.id ?? null"
-      (select)="onSelect($event)"
-    />
-  </section>
-
-  <section class="pane pane-detail" aria-label="Selected email">
-    <app-message-detail [message]="selected()" />
-  </section>
-
-  <section class="pane pane-ai" aria-label="AI reply suggestions">
-    <app-ai-panel [message]="selected()" (replied)="onReplied($event)" />
-  </section>
-</main>
+<router-outlet />

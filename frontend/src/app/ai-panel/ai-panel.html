@@ -16,6 +16,13 @@
       <div class="error" role="alert">{{ msg }}</div>
     }
 
+    @if (lowConfidence() && candidates().length) {
+      <div class="warn" role="alert">
+        Low confidence match. None of the templates fit this email well. Pick carefully or write
+        the reply by hand.
+      </div>
+    }
+
     @if (phase() === 'suggesting') {
       <div aria-hidden="true">
         @for (i of [1, 2, 3]; track i) {
@@ -67,20 +74,27 @@
       <div class="draft-area">
         <h3>Draft</h3>
         <textarea
-          [(ngModel)]="draft"
+          [ngModel]="draft()"
+          (ngModelChange)="onDraftEdited($event)"
           rows="14"
           aria-label="Reply draft"
           [disabled]="phase() === 'sending'"
         ></textarea>
         <p class="placeholder-hint">
-          <!-- ngNonBindable because Angular decodes entities before parsing,
-               so escaped braces would still become an interpolation. -->
-          Text in double braces like <span ngNonBindable>{{agent_name}}</span> still needs filling in by hand.
+          @if (manualEdit()) {
+            Edited by hand. Field changes no longer update this draft.
+          } @else {
+            Values from the review panel fill the draft automatically. Editing here switches to
+            manual mode.
+          }
         </p>
+        @if (sendBlockReason(); as reason) {
+          <p class="block-reason" role="status">{{ reason }}</p>
+        }
         <button
           matButton="filled"
           class="send-btn"
-          [disabled]="phase() === 'sending' || !draft().trim()"
+          [disabled]="phase() === 'sending' || !draft().trim() || sendBlockReason() !== null"
           (click)="send()"
         >
           {{ phase() === 'sending' ? 'Sending\u2026' : 'Send reply' }}

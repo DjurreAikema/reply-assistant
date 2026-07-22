@@ -1,0 +1,28 @@
+<main class="panes">
+  <section class="pane pane-list" aria-label="Inbox">
+    <app-message-list
+      [messages]="messages()"
+      [selectedId]="selected()?.id ?? null"
+      (select)="onSelect($event)"
+    />
+  </section>
+
+  <section class="pane pane-detail" aria-label="Selected email">
+    <app-message-detail
+      [message]="selected()"
+      [fields]="fields()"
+      [requiredKeys]="requiredKeys()"
+      (fieldChange)="onFieldEdit($event)"
+    />
+  </section>
+
+  <section class="pane pane-ai" aria-label="AI reply suggestions">
+    <app-ai-panel
+      [message]="selected()"
+      [fields]="fields()"
+      (fieldsChange)="onFields($event)"
+      (requiredKeysChange)="onRequiredKeys($event)"
+      (replied)="onReplied($event)"
+    />
+  </section>
+</main>

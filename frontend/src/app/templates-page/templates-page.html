@@ -1,0 +1,105 @@
+<div class="page">
+  <header class="page-head">
+    <div>
+      <h1>Reply templates</h1>
+      <p class="sub">
+        Changes apply to the next suggestion immediately, no restart needed. Placeholders are read
+        from the body automatically.
+      </p>
+    </div>
+    @if (editingId() === null) {
+      <button matButton="filled" (click)="startCreate()">New template</button>
+    }
+  </header>
+
+  @if (error(); as msg) {
+    <div class="error" role="alert">{{ msg }}</div>
+  }
+
+  @if (editingId() !== null) {
+    <section class="editor" aria-label="Template editor">
+      <h2>{{ editingId() === '' ? 'New template' : 'Edit template' }}</h2>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Name</mat-label>
+        <input matInput [ngModel]="name()" (ngModelChange)="name.set($event)" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Description (what kind of email this answers)</mat-label>
+        <input matInput [ngModel]="description()" (ngModelChange)="description.set($event)" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Body</mat-label>
+        <textarea
+          matInput
+          rows="12"
+          [ngModel]="body()"
+          (ngModelChange)="body.set($event)"
+        ></textarea>
+      </mat-form-field>
+      <div class="placeholder-row">
+        <span class="placeholder-label">Placeholders found:</span>
+        @for (p of parsedPlaceholders(); track p) {
+          <span class="chip">{{ p }}</span>
+        } @empty {
+          <span class="none">
+            <!-- ngNonBindable because Angular decodes entities before parsing,
+                 so escaped braces would still become an interpolation. -->
+            none yet, write them as <span ngNonBindable>{{placeholder_name}}</span>
+          </span>
+        }
+      </div>
+      <div class="editor-actions">
+        <button matButton (click)="cancel()">Cancel</button>
+        <button matButton="filled" [disabled]="!canSave()" (click)="save()">
+          {{ saving() ? 'Saving…' : 'Save template' }}
+        </button>
+      </div>
+    </section>
+  }
+
+  @if (templates(); as list) {
+    <div class="list">
+      @for (template of list; track template.id) {
+        <article class="card">
+          <div class="card-head">
+            <div class="card-title">
+              <h3>{{ template.name }}</h3>
+              <p class="desc">{{ template.description }}</p>
+            </div>
+            <div class="card-actions">
+              <button matButton (click)="startEdit(template)">Edit</button>
+              <button
+                matButton
+                class="delete-btn"
+                [class.armed]="pendingDeleteId() === template.id"
+                (click)="remove(template)"
+              >
+                {{ pendingDeleteId() === template.id ? 'Confirm delete' : 'Delete' }}
+              </button>
+            </div>
+          </div>
+          <pre class="body-preview">{{ template.body }}</pre>
+          <div class="placeholder-row">
+            @for (p of template.placeholders; track p) {
+              <span class="chip">{{ p }}</span>
+            } @empty {
+              <span class="none">no placeholders</span>
+            }
+          </div>
+        </article>
+      } @empty {
+        <p class="none">No templates yet. Create the first one.</p>
+      }
+    </div>
+  } @else if (!error()) {
+    <div class="list" aria-hidden="true">
+      @for (i of [1, 2, 3]; track i) {
+        <div class="card">
+          <span class="skeleton line w60"></span>
+          <span class="skeleton line w80"></span>
+          <span class="skeleton line w80"></span>
+        </div>
+      }
+    </div>
+  }
+</div>
