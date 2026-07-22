@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Candidate, Message, SentItem, Template } from './models';
+import { Message, SentItem, SuggestResponse, Template, TemplateInput } from './models';
 
 // All URLs are relative. In dev the Angular proxy forwards /api to Flask
 // on port 5000 (see proxy.conf.json), which also avoids CORS entirely.
@@ -22,8 +22,20 @@ export class ApiService {
     return this.http.get<Template[]>('/api/templates');
   }
 
-  suggest(messageId: string): Observable<{ candidates: Candidate[] }> {
-    return this.http.post<{ candidates: Candidate[] }>(`/api/messages/${messageId}/suggest`, {});
+  createTemplate(input: TemplateInput): Observable<Template> {
+    return this.http.post<Template>('/api/templates', input);
+  }
+
+  updateTemplate(id: string, input: TemplateInput): Observable<Template> {
+    return this.http.put<Template>(`/api/templates/${id}`, input);
+  }
+
+  deleteTemplate(id: string): Observable<void> {
+    return this.http.delete<void>(`/api/templates/${id}`);
+  }
+
+  suggest(messageId: string): Observable<SuggestResponse> {
+    return this.http.post<SuggestResponse>(`/api/messages/${messageId}/suggest`, {});
   }
 
   draft(messageId: string, templateId: string): Observable<{ body: string }> {
@@ -32,7 +44,10 @@ export class ApiService {
     });
   }
 
-  send(messageId: string, body: string): Observable<SentItem> {
-    return this.http.post<SentItem>(`/api/messages/${messageId}/send`, { body });
+  send(messageId: string, body: string, templateId: string | null): Observable<SentItem> {
+    return this.http.post<SentItem>(`/api/messages/${messageId}/send`, {
+      body,
+      template_id: templateId,
+    });
   }
 }

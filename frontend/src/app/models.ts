@@ -32,11 +32,34 @@ export interface Candidate {
   template_name: string;
   confidence: number;
   reason: string;
+  // Declared placeholders of the template, minus agent_name which the
+  // backend fills from config. These drive send gating.
+  placeholders: string[];
+}
+
+export interface ExtractedField {
+  key: string;
+  value: string;
+  confidence: number;
+  source_span: string;
+}
+
+export interface SuggestResponse {
+  candidates: Candidate[];
+  fields: ExtractedField[];
+  low_confidence: boolean;
+}
+
+export interface TemplateInput {
+  name: string;
+  description: string;
+  body: string;
 }
 
 export interface SentItem {
   id: string;
   inReplyTo: string;
+  template_id: string | null;
   subject: string;
   sentDateTime: string;
 }

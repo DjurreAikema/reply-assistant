@@ -134,6 +134,24 @@
   background: var(--mat-sys-error-container);
 }
 
+.warn {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--mat-sys-on-tertiary-container);
+  background: var(--mat-sys-tertiary-container);
+  border: 1px solid var(--mat-sys-tertiary);
+}
+
+.block-reason {
+  margin: 0;
+  align-self: flex-end;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--mat-sys-error);
+}
+
 .skeleton-card {
   cursor: default;
   gap: 10px;

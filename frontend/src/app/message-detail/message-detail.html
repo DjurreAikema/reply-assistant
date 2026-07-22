@@ -12,6 +12,13 @@
       </div>
     </header>
     <pre class="body">{{ msg.body.content }}</pre>
+    @if (fields().length && !msg.isReplied) {
+      <app-review-panel
+        [fields]="fields()"
+        [requiredKeys]="requiredKeys()"
+        (fieldChange)="fieldChange.emit($event)"
+      />
+    }
   </article>
 } @else {
   <div class="empty">

@@ -30,7 +30,8 @@ frontend/.angular/cache/
 npm-debug.log*
 yarn-error.log
 
-# Editors
+# Editors and local agent tooling
+.claude/
 .idea/
 .vscode/*
 !.vscode/extensions.json
