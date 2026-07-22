@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Env and secrets
+.env
+.env.*
+!.env.example
+
+# Runtime data. sent.json is created on first send, messages.json gets
+# isReplied flipped in place. Uncomment messages.json if the seed state
+# should stay clean in git.
+backend/data/sent.json
+# backend/data/messages.json
+*.tmp
+
+# Node and Angular
+node_modules/
+frontend/dist/
+frontend/tmp/
+frontend/out-tsc/
+frontend/.angular/cache/
+npm-debug.log*
+yarn-error.log
+
+# Editors
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+.history/
+
+# OS
+.DS_Store
+Thumbs.db
