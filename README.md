@@ -87,7 +87,9 @@ Four columns, left to right:
 - **AI column.** Template suggestions on top, the review panel underneath. The two halves scroll independently so a long candidate list cannot push the review panel out of view.
 - **Reply draft.** The draft, the send button and the send block reason, in their own column so the draft has room once a thread has several turns.
 
-Below 1400px the AI and draft columns fold into one column with the draft on top. Below 1000px the inbox becomes a drawer with a toggle above the transcript. Below 820px the two remaining columns stack rather than squeeze.
+All four columns are visible at 1720px and up. Below 1720px the AI and draft columns fold into one column with the draft on top, so a 1512px screen shows three columns rather than four. Below 1350px the inbox becomes a drawer with a toggle above the transcript. Below 820px the two remaining columns stack rather than squeeze.
+
+The fold is set by the draft, not by the viewport: it holds the draft at 420px in the four column layout and 440px once folded, against the 250px it would be squeezed to if four columns were forced onto a 1512px screen.
 
 ## Conversations
 
@@ -105,7 +107,7 @@ Send is blocked, with the missing field named next to the button, until every pl
 
 ## Template management
 
-The Templates page (top right) lists all templates with create, edit and delete. Placeholders are parsed from the body automatically, both live in the form and server side on save. Changes are picked up by the next suggest call with no restart. Deleting a template that a sent reply references is refused; sent replies record their `template_id` since phase 2 (older sent items never block).
+The Templates page (second item in the left nav rail) lists all templates with create, edit and delete. Placeholders are parsed from the body automatically, both live in the form and server side on save. Changes are picked up by the next suggest call with no restart. Deleting a template that a sent reply references is refused; sent replies record their `template_id` since phase 2 (older sent items never block).
 
 ## Data files
 

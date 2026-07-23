@@ -12,8 +12,10 @@ import { Conversation, ConversationItem, Message, SentItem } from '../models';
 import { ReplyWorkspace } from '../reply-workspace/reply-workspace';
 
 // Below this the inbox stops being a column and becomes a drawer, rather
-// than squeezing three columns into a phone.
-const DRAWER_QUERY = '(max-width: 1000px)';
+// than squeezing three columns into a phone. 1350 rather than 1000: at
+// 350px of drawer the transcript drops under 400px before 1350, so the
+// column the layout exists to protect is the first one to go.
+const DRAWER_QUERY = '(max-width: 1350px)';
 
 @Component({
   selector: 'app-inbox',

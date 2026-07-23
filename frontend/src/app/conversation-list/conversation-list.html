@@ -21,12 +21,12 @@
         </span>
         <span class="marks">
           @if (conv.messageCount > 1) {
-            <span class="count" [attr.aria-label]="conv.messageCount + ' messages'">{{
+            <span class="pill count" [attr.aria-label]="conv.messageCount + ' messages'">{{
               conv.messageCount
             }}</span>
           }
           @if (conv.lastIsInbound) {
-            <span class="awaiting">Awaiting reply</span>
+            <span class="pill awaiting">Awaiting</span>
           }
         </span>
       </button>

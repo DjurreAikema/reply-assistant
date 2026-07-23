@@ -1,33 +1,49 @@
+// The host carries the gutter; the list inside it is the card, so the
+// card scrolls internally instead of sliding under the page edge.
 :host {
   display: block;
   height: 100%;
-  overflow-y: auto;
+  min-height: 0;
+  padding: var(--app-space-5) 0 var(--app-space-5) var(--app-space-5);
+  box-sizing: border-box;
 }
 
 .list {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--app-space-3);
   display: flex;
   flex-direction: column;
+  gap: var(--app-space-1);
+  background: var(--app-card);
+  border-radius: var(--app-radius-card);
+  box-shadow: var(--mat-sys-level1);
+  box-sizing: border-box;
 }
 
 .row {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: var(--app-space-3);
   width: 100%;
-  padding: 12px 14px;
+  padding: var(--app-space-4);
   border: none;
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--app-radius-input);
   background: transparent;
   text-align: left;
   cursor: pointer;
   font: inherit;
 
   &:hover {
-    background: var(--mat-sys-surface-container);
+    background: var(--app-hover);
   }
 
+  // The inbox is navigation, so the selected row counts as the active
+  // nav item for the purposes of the accent budget.
   &.selected {
-    background: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-primary-container);
+    background: var(--mat-sys-primary-container);
   }
 
   &:focus-visible {
@@ -40,7 +56,7 @@
   flex: none;
   width: 8px;
   height: 8px;
-  margin-top: 6px;
+  margin-top: 7px;
   border-radius: 50%;
   background: transparent;
 
@@ -54,45 +70,52 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--app-space-1);
 }
 
 .top {
   display: flex;
   justify-content: space-between;
-  gap: 8px;
+  align-items: baseline;
+  gap: var(--app-space-2);
 }
 
 .sender {
-  font-weight: 500;
+  font-size: var(--app-text-body);
+  font-weight: var(--app-weight-medium);
+  line-height: var(--app-line-tight);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 
   .unread & {
-    font-weight: 700;
+    font-weight: var(--app-weight-strong);
   }
 }
 
+// Stays muted on a selected row too: it clears 7:1 against the accent
+// fill, so the secondary lines keep their place in the hierarchy.
 .date {
   flex: none;
-  font-size: 12px;
+  font-size: var(--app-text-meta);
   color: var(--mat-sys-on-surface-variant);
 }
 
 .subject {
-  font-size: 13px;
+  font-size: var(--app-text-body);
+  font-weight: var(--app-weight-normal);
+  line-height: var(--app-line-tight);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 
   .unread & {
-    font-weight: 600;
+    font-weight: var(--app-weight-medium);
   }
 }
 
 .preview {
-  font-size: 12px;
+  font-size: var(--app-text-meta);
   color: var(--mat-sys-on-surface-variant);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -105,30 +128,21 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 4px;
+  gap: var(--app-space-1);
 }
 
 // Turn count, shown only once a thread has more than one item.
 .count {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 1px 7px;
-  border-radius: 10px;
-  color: var(--mat-sys-on-surface-variant);
-  background: var(--mat-sys-surface-container-high);
   font-variant-numeric: tabular-nums;
 }
 
 // Derived from the last item being inbound, not from isReplied.
 .awaiting {
-  font-size: 11px;
-  font-weight: 500;
-  white-space: nowrap;
-  color: var(--mat-sys-on-surface-variant);
+  font-weight: var(--app-weight-normal);
 }
 
 .skeleton-row {
   flex-direction: column;
-  gap: 6px;
+  gap: var(--app-space-2);
   cursor: default;
 }

@@ -9,9 +9,12 @@
   background: transparent;
 }
 
+// No border: the drawer is a transparent hole in the tinted background
+// and the list inside it floats as its own card. 350px is where the
+// doubled row padding and the "Awaiting" chip still leave the subject
+// line, which is what the list is scanned by, its current width.
 .drawer {
-  width: 300px;
-  border-right: 1px solid var(--mat-sys-outline-variant);
+  width: 350px;
 }
 
 .content {
@@ -21,11 +24,16 @@
 
 // Two tracks here, not four: the inbox is the drawer on the left, and the
 // AI and draft columns are the two tracks inside app-reply-workspace.
+// The 776px workspace track is 340 for the AI column, 16 of gap, and 420
+// for the draft, which is the width the draft needs to be written in.
 .panes {
   height: 100%;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 776px;
+  gap: var(--app-space-4);
+  padding: var(--app-space-5);
+  box-sizing: border-box;
 }
 
 .pane {
@@ -43,14 +51,15 @@
 .drawer-toggle {
   flex: none;
   align-self: flex-start;
-  margin: 12px 0 0 16px;
+  margin-bottom: var(--app-space-3);
 }
 
-// The AI and draft columns fold into one, so the reply half needs less
-// room and the conversation keeps the rest.
-@media (max-width: 1400px) {
+// Four columns stop fitting here, not at the 1400px the layout was first
+// drawn at. Below this the AI and draft columns fold into one, which is
+// what keeps the draft above 380px rather than squeezing it to 250.
+@media (max-width: 1720px) {
   .panes {
-    grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
+    grid-template-columns: minmax(0, 1fr) minmax(400px, 440px);
   }
 }
 
