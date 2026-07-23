@@ -1,0 +1,52 @@
+@if (items().length) {
+  <article class="thread">
+    <h1>{{ subject() }}</h1>
+
+    @for (turn of turns(); track turn.item.id) {
+      <section
+        class="turn"
+        [class.inbound]="turn.item.direction === 'inbound'"
+        [class.outbound]="turn.item.direction === 'outbound'"
+        [class.closed]="!turn.open"
+      >
+        <button
+          type="button"
+          class="turn-head"
+          [attr.aria-expanded]="turn.open"
+          (click)="toggle(turn)"
+        >
+          <span class="avatar" aria-hidden="true">{{ turn.sender.charAt(0) }}</span>
+          <span class="who">
+            <span class="name">{{ turn.sender }}</span>
+            @if (turn.item.direction === 'inbound') {
+              <span class="address">{{ turn.item.from?.emailAddress?.address }}</span>
+            } @else {
+              <span class="address">Sent reply</span>
+            }
+          </span>
+          @if (turn.item.id === justSentId()) {
+            <span class="just-sent">Sent</span>
+          }
+          <span class="stamp">{{ turn.item.timestamp | date: 'EEE d MMM y, HH:mm' }}</span>
+        </button>
+
+        @if (turn.open) {
+          <pre class="body" [class.clamped]="turn.clampable && !turn.full">{{
+            turn.item.body.content
+          }}</pre>
+          @if (turn.clampable) {
+            <button type="button" class="more" (click)="toggleFull(turn, $event)">
+              {{ turn.full ? 'Show less' : 'Show more' }}
+            </button>
+          }
+        } @else {
+          <p class="collapsed-preview">{{ preview(turn.item) }}</p>
+        }
+      </section>
+    }
+  </article>
+} @else {
+  <div class="empty">
+    <p>Select a conversation to read the thread and get reply suggestions.</p>
+  </div>
+}

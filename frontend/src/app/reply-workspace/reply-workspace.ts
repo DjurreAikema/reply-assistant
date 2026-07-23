@@ -5,36 +5,32 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatRippleModule } from '@angular/material/core';
 
 import { ApiService } from '../api.service';
-import { Candidate, ExtractedField, Message } from '../models';
+import { Candidate, ExtractedField, Message, SentItem } from '../models';
+import { ReviewPanel } from '../review-panel/review-panel';
 
-type Phase = 'idle' | 'suggesting' | 'suggested' | 'drafting' | 'drafted' | 'sending' | 'sent';
+type Phase = 'idle' | 'suggesting' | 'suggested' | 'drafting' | 'drafted' | 'sending';
 
 const TOKEN_RE = /\{\{\s*(\w+)\s*\}\}/g;
 
 @Component({
-  selector: 'app-ai-panel',
-  imports: [FormsModule, MatButtonModule, MatProgressBarModule, MatRippleModule],
-  templateUrl: './ai-panel.html',
-  styleUrl: './ai-panel.scss',
+  selector: 'app-reply-workspace',
+  imports: [FormsModule, MatButtonModule, MatProgressBarModule, MatRippleModule, ReviewPanel],
+  templateUrl: './reply-workspace.html',
+  styleUrl: './reply-workspace.scss',
 })
-export class AiPanel {
+export class ReplyWorkspace {
   private api = inject(ApiService);
 
   message = input<Message | null>(null);
-  // Owned by the inbox page and edited in the review panel; consumed
-  // here for draft substitution and send gating.
-  fields = input<ExtractedField[]>([]);
-  fieldsChange = output<ExtractedField[]>();
-  // Which field keys matter right now: the union of the candidates'
-  // placeholders until a template is picked, then just the chosen one's.
-  // The review panel uses this to foreground what actually needs review.
-  requiredKeysChange = output<string[]>();
-  replied = output<string>();
+  replied = output<SentItem>();
 
   phase = signal<Phase>('idle');
   candidates = signal<Candidate[]>([]);
   selectedTemplateId = signal<string | null>(null);
   lowConfidence = signal(false);
+  // Extracted fields are owned here now that the review panel sits in
+  // this column: nothing outside the reply workspace reads them.
+  fields = signal<ExtractedField[]>([]);
   // rawDraft is the model output with its {{tokens}} intact. The visible
   // draft is recomputed from rawDraft plus the current field values on
   // every field edit, never patched in place, so stale or short values
@@ -48,6 +44,15 @@ export class AiPanel {
   selectedCandidate = computed(
     () => this.candidates().find((c) => c.template_id === this.selectedTemplateId()) ?? null,
   );
+
+  // Which field keys matter right now: the union of the candidates'
+  // placeholders until a template is picked, then just the chosen one's.
+  // The review panel uses this to foreground what actually needs review.
+  requiredKeys = computed(() => {
+    const chosen = this.selectedCandidate();
+    if (chosen) return [...chosen.placeholders];
+    return [...new Set(this.candidates().flatMap((c) => c.placeholders))];
+  });
 
   // Primary send gate: the chosen template's declared placeholders must
   // all have a non-empty field value. The draft text is not trusted for
@@ -84,16 +89,15 @@ export class AiPanel {
   });
 
   constructor() {
-    // Selecting a message is the trigger for suggestions, no extra click.
-    // The message id is captured so a slow response for a previous email
-    // cannot land in the panel after switching to another one.
+    // Selecting a conversation is the trigger for suggestions, no extra
+    // click. The message id is captured so a slow response for a previous
+    // thread cannot land in the panel after switching to another one.
     effect(() => {
       const msg = this.message();
       this.reset();
-      if (!msg || msg.isReplied) {
-        if (msg?.isReplied) this.phase.set('sent');
-        return;
-      }
+      if (!msg) return;
+      // isReplied is deliberately not consulted. A thread can be replied
+      // to more than once, so the stored flag no longer gates anything.
       this.phase.set('suggesting');
       const requestedId = msg.id;
       this.api.suggest(requestedId).subscribe({
@@ -101,8 +105,7 @@ export class AiPanel {
           if (this.message()?.id !== requestedId) return;
           this.candidates.set(res.candidates);
           this.lowConfidence.set(res.low_confidence);
-          this.fieldsChange.emit(res.fields);
-          this.requiredKeysChange.emit([...new Set(res.candidates.flatMap((c) => c.placeholders))]);
+          this.fields.set(res.fields);
           this.phase.set('suggested');
           // Top candidate is expanded by default; the draft itself still
           // waits for an explicit choice so the flow stays two clicks.
@@ -125,7 +128,6 @@ export class AiPanel {
     const msg = this.message();
     if (!msg || this.phase() === 'drafting' || this.phase() === 'sending') return;
     this.selectedTemplateId.set(candidate.template_id);
-    this.requiredKeysChange.emit([...candidate.placeholders]);
     this.phase.set('drafting');
     this.error.set(null);
     const requestedId = msg.id;
@@ -140,6 +142,12 @@ export class AiPanel {
     });
   }
 
+  onFieldEdit(edit: { key: string; value: string }): void {
+    this.fields.update((list) =>
+      list.map((f) => (f.key === edit.key ? { ...f, value: edit.value } : f)),
+    );
+  }
+
   onDraftEdited(value: string): void {
     this.manualEdit.set(true);
     this.draft.set(value);
@@ -151,9 +159,13 @@ export class AiPanel {
     this.phase.set('sending');
     this.error.set(null);
     this.api.send(msg.id, this.draft(), this.selectedTemplateId()).subscribe({
-      next: () => {
-        this.phase.set('sent');
-        this.replied.emit(msg.id);
+      next: (sent) => {
+        // Back to a composable column rather than a terminal screen: the
+        // suggestions and the extracted fields survive, so another
+        // template can be drafted without re-running the model.
+        this.clearDraft();
+        this.phase.set(this.candidates().length ? 'suggested' : 'idle');
+        this.replied.emit(sent);
       },
       error: (err) => this.fail(msg.id, err),
     });
@@ -174,17 +186,20 @@ export class AiPanel {
     });
   }
 
-  private reset(): void {
-    this.phase.set('idle');
-    this.candidates.set([]);
+  private clearDraft(): void {
     this.selectedTemplateId.set(null);
-    this.lowConfidence.set(false);
     this.rawDraft.set('');
     this.draft.set('');
     this.manualEdit.set(false);
+  }
+
+  private reset(): void {
+    this.phase.set('idle');
+    this.candidates.set([]);
+    this.lowConfidence.set(false);
+    this.fields.set([]);
     this.error.set(null);
-    this.fieldsChange.emit([]);
-    this.requiredKeysChange.emit([]);
+    this.clearDraft();
   }
 
   private fail(requestedId: string, err: { error?: { error?: string } }): void {

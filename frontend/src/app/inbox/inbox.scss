@@ -4,11 +4,28 @@
   min-height: 0;
 }
 
+.shell {
+  height: 100%;
+  background: transparent;
+}
+
+.drawer {
+  width: 300px;
+  border-right: 1px solid var(--mat-sys-outline-variant);
+}
+
+.content {
+  min-width: 0;
+  overflow: hidden;
+}
+
+// Two tracks here, not four: the inbox is the drawer on the left, and the
+// AI and draft columns are the two tracks inside app-reply-workspace.
 .panes {
   height: 100%;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(260px, 320px) 1fr minmax(300px, 380px);
+  grid-template-columns: minmax(0, 1fr) minmax(560px, 640px);
 }
 
 .pane {
@@ -17,25 +34,36 @@
   overflow: hidden;
 }
 
-.pane-list {
-  border-right: 1px solid var(--mat-sys-outline-variant);
+.pane-thread {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 }
 
-.pane-ai {
-  border-left: 1px solid var(--mat-sys-outline-variant);
-  background: var(--mat-sys-surface-container-low);
+.drawer-toggle {
+  flex: none;
+  align-self: flex-start;
+  margin: 12px 0 0 16px;
 }
 
-@media (max-width: 900px) {
+// The AI and draft columns fold into one, so the reply half needs less
+// room and the conversation keeps the rest.
+@media (max-width: 1400px) {
   .panes {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
+  }
+}
+
+// Narrower than this the two remaining columns would both be too tight,
+// so they stack and the page scrolls as one.
+@media (max-width: 820px) {
+  .panes {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
     overflow-y: auto;
   }
 
-  .pane-list,
-  .pane-ai {
-    border: none;
-    border-bottom: 1px solid var(--mat-sys-outline-variant);
+  .pane-thread {
+    overflow: visible;
   }
 }

@@ -19,6 +19,40 @@ export interface Message {
   isReplied: boolean;
 }
 
+// A conversation is the messages and sent items sharing a conversationId.
+// The summary is what the inbox row needs; the items are the thread.
+export interface Conversation {
+  id: string;
+  subject: string;
+  participant: EmailAddress;
+  lastPreview: string;
+  lastTimestamp: string;
+  messageCount: number;
+  lastIsInbound: boolean;
+  isRead: boolean;
+}
+
+// One item in a thread. The backend tags both source shapes with
+// direction and timestamp; the rest of each shape comes through as it is,
+// so the inbound branch is still a Message.
+export interface ConversationItem {
+  id: string;
+  direction: 'inbound' | 'outbound';
+  timestamp: string;
+  conversationId: string;
+  subject: string;
+  body: { contentType: string; content: string };
+  from?: { emailAddress: EmailAddress };
+  to?: { emailAddress: EmailAddress };
+  bodyPreview?: string;
+  receivedDateTime?: string;
+  sentDateTime?: string;
+  isRead?: boolean;
+  isReplied?: boolean;
+  inReplyTo?: string;
+  template_id?: string | null;
+}
+
 export interface Template {
   id: string;
   name: string;

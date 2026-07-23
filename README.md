@@ -1,6 +1,6 @@
 # Reply Assistant, phase 2
 
-AI-assisted email replies for a customer service team handling package delivery issues. Click an email, get three suggested templates plus every value the AI extracted from the email, review and fix those values, get a generated draft, send.
+AI-assisted email replies for a customer service team handling package delivery issues. Click a conversation, get three suggested templates plus every value the AI extracted from the customer's latest message, review and fix those values, get a generated draft, send. The reply appends to the thread and the conversation stays open for the next turn.
 
 Phase 2 adds field extraction with human review, send gating, low confidence flagging, and full template management. Storage is still JSON files. The seams for later phases are `LLMProvider` (backend/app/llm) and `MailService` (backend/app/services/mail_service.py). New capability goes behind those interfaces, not around them.
 
@@ -78,9 +78,28 @@ Template matching and field extraction happen in one suggest call. The model ret
 
 Draft generation keeps the chosen template's structure and tone and is instructed to leave every `{{placeholder}}` untouched so the app can fill them from reviewed values. The small local model only sometimes obeys that and often fills values itself, which is why sending is gated on the reviewed field data rather than on the draft text. `agent_name` is filled from `AGENT_NAME` config before the model sees the template and never appears in the review panel.
 
+## Layout
+
+Four columns, left to right:
+
+- **Inbox.** One row per conversation, showing the last message, the turn count, and whether the thread is waiting on a reply. Unread styling comes from the messages themselves, the waiting label from the thread's last item being inbound.
+- **Conversation.** The thread as a transcript, oldest first. Inbound and outbound are distinguished by indent and surface tint, each with its own timestamp. Long bodies clamp with a show more control, and older turns collapse to a preview line. The newest turn and the newest inbound message stay expanded, since those are what the agent is working from.
+- **AI column.** Template suggestions on top, the review panel underneath. The two halves scroll independently so a long candidate list cannot push the review panel out of view.
+- **Reply draft.** The draft, the send button and the send block reason, in their own column so the draft has room once a thread has several turns.
+
+Below 1400px the AI and draft columns fold into one column with the draft on top. Below 1000px the inbox becomes a drawer with a toggle above the transcript. Below 820px the two remaining columns stack rather than squeeze.
+
+## Conversations
+
+A conversation is the messages and sent items sharing a `conversationId`, ordered by timestamp, inbound and outbound together. There is no separate conversation file and no id generation: the grouping is derived on read in `MailService`.
+
+Sending appends the reply to the transcript with a brief Sent marker and resets the draft column to a composable state. The suggestions and reviewed fields survive the send, so a different template can be drafted without another model call. There is no terminal sent screen and no reload. The stored `isReplied` flag is kept for compatibility but gates nothing; thread state is read from whether the last item is inbound or outbound, which is what lets a thread hold more than one reply.
+
+Suggestion fires once per conversation selection, against the most recent inbound message. Reloading a thread after a send deliberately does not re-suggest. Nothing in the app generates incoming customer replies, but the model allows them: add a message to `messages.json` with an existing `conversationId` and it appears in the thread, drives the inbox row, and becomes the input for the next suggestion, with no code change.
+
 ## Review panel and send gating
 
-Below the message body the review panel lists each extracted value in an editable input with a confidence indicator and the email fragment it was taken from (hover the source link, or click to pin it). Empty fields that the suggested templates need are flagged as needing input; empty fields no candidate template uses sit behind a toggle. Edits substitute into the draft live while it still contains `{{tokens}}`. Once the agent edits the draft text by hand, substitution stops and their text is never overwritten.
+In the lower half of the AI column the review panel lists each extracted value in an editable input with a confidence indicator and the email fragment it was taken from (hover the source link, or click to pin it). Empty fields that the suggested templates need are flagged as needing input; empty fields no candidate template uses sit behind a toggle. Edits substitute into the draft live while it still contains `{{tokens}}`. Once the agent edits the draft text by hand, substitution stops and their text is never overwritten.
 
 Send is blocked, with the missing field named next to the button, until every placeholder the chosen template declares has a non-empty field value. A literal `{{token}}` remaining in the draft text also blocks, as a backstop.
 
@@ -90,13 +109,16 @@ The Templates page (top right) lists all templates with create, edit and delete.
 
 ## Data files
 
-- `backend/data/messages.json`: 12 seed emails in Microsoft Graph message shape, plus one app-level `isReplied` flag that Graph does not have. Two of the twelve are deliberately vague or off-topic to exercise the fallback template.
+- `backend/data/messages.json`: 12 seed emails in Microsoft Graph message shape, one conversation each, plus one app-level `isReplied` flag that Graph does not have. Two of the twelve are deliberately vague or off-topic to exercise the fallback template.
 - `backend/data/templates.json`: 10 seed reply templates with `{{placeholders}}`, editable from the Templates page.
-- `backend/data/sent.json`: created on first send. Delete it and reset `isReplied` flags to start fresh.
+- `backend/data/sent.json`: sent replies, grouped into threads by `conversationId`. Delete it and reset `isReplied` flags to start fresh.
 
 ## API
 
 ```
+GET    /api/conversations         thread list: subject, participant, last preview and
+                                  timestamp, message count, lastIsInbound, isRead
+GET    /api/conversations/<id>    ordered thread items, each tagged direction and timestamp
 GET    /api/messages
 GET    /api/messages/<id>
 GET    /api/templates
@@ -110,8 +132,9 @@ POST   /api/messages/<id>/send     body: { "body": "...", "template_id": "..." }
 
 ## Notes for later phases
 
-- The frontend refetches the message list after a send instead of patching local state. Fine at 12 messages, revisit if the list gets big.
-- The in-flight request guard in `ai-panel.ts` drops responses for a message that is no longer selected. Keep that pattern when adding calls.
+- The frontend refetches the conversation list and the open thread after a send instead of patching local state. Fine at this size, revisit if the list gets big.
+- `MailService` groups threads on every read. That is honest at 12 conversations and wrong at 12000; a Graph implementation would page and filter server side instead.
+- The in-flight request guard in `reply-workspace.ts` drops responses for a message that is no longer selected. Keep that pattern when adding calls.
 - With the default llama3.1:8b, the two ambiguous seed emails score around 0.7 to 0.8 top confidence, so the low confidence warning does not trigger on them. The threshold logic works; the local model is simply overconfident. The Anthropic provider or a threshold discussion is the honest fix, not prompt tuning until the demo behaves.
 - Angular 20 was pinned at scaffold time. `ng update @angular/core@21 @angular/cli@21` when on Node 22.22.3 or newer.
 - No Google Fonts CDN anywhere, the default path must work offline. Roboto is used only if present on the system.

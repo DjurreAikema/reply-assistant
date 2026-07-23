@@ -1,0 +1,46 @@
+@if (conversations(); as list) {
+  <div class="list" role="listbox" aria-label="Inbox">
+    @for (conv of list; track conv.id) {
+      <button
+        matRipple
+        class="row"
+        role="option"
+        [class.selected]="conv.id === selectedId()"
+        [class.unread]="!conv.isRead"
+        [attr.aria-selected]="conv.id === selectedId()"
+        (click)="select.emit(conv)"
+      >
+        <span class="dot" aria-hidden="true"></span>
+        <span class="content">
+          <span class="top">
+            <span class="sender">{{ conv.participant.name }}</span>
+            <span class="date">{{ conv.lastTimestamp | date: 'd MMM' }}</span>
+          </span>
+          <span class="subject">{{ conv.subject }}</span>
+          <span class="preview">{{ conv.lastPreview }}</span>
+        </span>
+        <span class="marks">
+          @if (conv.messageCount > 1) {
+            <span class="count" [attr.aria-label]="conv.messageCount + ' messages'">{{
+              conv.messageCount
+            }}</span>
+          }
+          @if (conv.lastIsInbound) {
+            <span class="awaiting">Awaiting reply</span>
+          }
+        </span>
+      </button>
+    }
+  </div>
+} @else {
+  <!-- Skeletons keep the pane shaped like the data it is waiting for. -->
+  <div class="list" aria-hidden="true">
+    @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+      <div class="row skeleton-row">
+        <span class="skeleton line w40"></span>
+        <span class="skeleton line w80"></span>
+        <span class="skeleton line w60"></span>
+      </div>
+    }
+  </div>
+}

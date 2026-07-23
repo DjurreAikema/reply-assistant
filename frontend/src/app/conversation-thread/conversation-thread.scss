@@ -1,0 +1,155 @@
+:host {
+  display: block;
+}
+
+.thread {
+  padding: 24px 28px;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+h1 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+// Full width blocks rather than chat bubbles. Direction reads from the
+// indent and the surface tint, not from a tail or a hard right align.
+.turn {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--mat-sys-outline-variant);
+
+  &.outbound {
+    margin-left: 32px;
+    background: var(--mat-sys-surface-container);
+  }
+}
+
+.turn-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+}
+
+.avatar {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  color: var(--mat-sys-on-primary-container);
+  background: var(--mat-sys-primary-container);
+
+  .outbound & {
+    color: var(--mat-sys-on-secondary-container);
+    background: var(--mat-sys-secondary-container);
+  }
+}
+
+.who {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-weight: 500;
+}
+
+.address {
+  font-size: 12px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.just-sent {
+  flex: none;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: var(--mat-sys-on-tertiary-container);
+  background: var(--mat-sys-tertiary-container);
+}
+
+.stamp {
+  flex: none;
+  font-size: 12px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// pre keeps the plain-text line breaks from the JSON body without any
+// HTML rendering, which also sidesteps sanitisation concerns for now.
+.body {
+  margin: 12px 0 0;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+
+  &.clamped {
+    max-height: 8.5em;
+    overflow: hidden;
+    // Fades the cut edge so a clamped body does not look like the body
+    // simply ends there.
+    mask-image: linear-gradient(to bottom, #000 60%, transparent);
+  }
+}
+
+.more,
+.collapsed-preview {
+  font: inherit;
+  font-size: 13px;
+}
+
+.more {
+  margin-top: 8px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--mat-sys-primary);
+  font-weight: 500;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+}
+
+.collapsed-preview {
+  margin: 8px 0 0;
+  color: var(--mat-sys-on-surface-variant);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+}
