@@ -3,14 +3,115 @@
 // with a system-font fallback chain that looks fine without it.
 @use '@angular/material' as mat;
 
+// Passed to mat.theme() as well as set on body, so Material's own
+// components fall back the same way the app does when Roboto is absent.
+$font-stack: Roboto, 'Segoe UI', system-ui, -apple-system, sans-serif;
+
 html {
   color-scheme: light;
+
   @include mat.theme((
-    color: mat.$azure-palette,
-    typography: Roboto,
+    color: mat.$blue-palette,
+    typography: (
+      plain-family: $font-stack,
+      brand-family: $font-stack,
+      bold-weight: 600,
+      medium-weight: 500,
+      regular-weight: 400,
+    ),
     density: 0,
   ));
+
+  // Wide and low-opacity, so separation reads as float rather than as a
+  // drawn edge. Replaces the M3 defaults for every Material surface too.
+  --mat-sys-level1: 0 1px 2px rgb(0 0 0 / 4%), 0 1px 3px rgb(0 0 0 / 6%);
+  --mat-sys-level2: 0 2px 4px rgb(0 0 0 / 4%), 0 6px 16px rgb(0 0 0 / 7%);
+  --mat-sys-level3: 0 4px 8px rgb(0 0 0 / 5%), 0 12px 28px rgb(0 0 0 / 10%);
+
+  // Surface roles. Named here so no component has to decide which rung of
+  // the generated ramp counts as "a card".
+  --app-bg: var(--mat-sys-surface-container);
+  --app-card: var(--mat-sys-surface);
+  --app-well: var(--mat-sys-surface-container-low);
+  --app-hover: var(--mat-sys-surface-container-high);
+
+  // Confidence bands. These are deliberately not Material roles.
+  //
+  // Passing a bare palette to mat.theme() makes tertiary default to the
+  // primary palette, so --mat-sys-tertiary and --mat-sys-primary resolve
+  // to the same colour. The three bands in review-panel.ts would then
+  // render in two colours. Angular's green palettes cannot fix that
+  // either: their tone-90 container fills are neon (#63ff94, #00fbfb).
+  //
+  // So this scale owns its colours. Do not "simplify" these back to
+  // tertiary/primary/error. Each pair is checked at 4.5:1 or better both
+  // against --app-well, where the bands sit, and against its own fill.
+  --app-conf-hi: #1b6b43;
+  --app-conf-hi-container: #dcefe4;
+  --app-conf-mid: #8a5200;
+  --app-conf-mid-container: #f7e7c9;
+  --app-conf-lo: var(--mat-sys-error);
+  --app-conf-lo-container: var(--mat-sys-error-container);
+
+  // Spacing. Roughly double the previous values; the gaps grow more than
+  // the paddings, which is where the density actually reads.
+  --app-space-1: 4px;
+  --app-space-2: 8px;
+  --app-space-3: 12px;
+  --app-space-4: 16px;
+  --app-space-5: 20px;
+  --app-space-6: 24px;
+  --app-space-7: 32px;
+  --app-space-8: 40px;
+
+  --app-pad-card: var(--app-space-5);
+  --app-pad-panel: var(--app-space-6);
+  --app-pad-page: var(--app-space-7);
+  --app-pad-row: var(--app-space-4) var(--app-space-5);
+  --app-gap-tight: var(--app-space-2);
+  --app-gap: var(--app-space-3);
+  --app-gap-loose: var(--app-space-5);
+
+  // Radius. Aliases onto M3 shape tokens, which already carry the values
+  // the design calls for.
+  --app-radius-card: var(--mat-sys-corner-large);
+  --app-radius-input: var(--mat-sys-corner-medium);
+  --app-radius-well: var(--mat-sys-corner-medium);
+  --app-radius-pill: var(--mat-sys-corner-full);
+
+  // Four sizes, three weights. Hierarchy comes from weight, so 14px body
+  // and 16px headings sit one step apart and lean on 400/500/600.
+  --app-text-meta: 12px;
+  --app-text-body: 14px;
+  --app-text-heading: 16px;
+  --app-text-title: 20px;
+  --app-weight-normal: 400;
+  --app-weight-medium: 500;
+  --app-weight-strong: 600;
+  --app-line-body: 1.55;
+  --app-line-tight: 1.3;
 }
+
+// 12px inputs per the design; Material defaults these to corner-extra-small.
+@include mat.form-field-overrides((
+  outlined-container-shape: 12px,
+  filled-container-shape: 12px,
+));
+
+// Confidence bars read as pills rather than as bare rules.
+@include mat.progress-bar-overrides((
+  track-shape: var(--mat-sys-corner-full),
+  track-height: 6px,
+  active-indicator-height: 6px,
+));
+
+// The drawer is a hole in the tinted background; the inbox list floats
+// inside it as its own card.
+@include mat.sidenav-overrides((
+  container-background-color: transparent,
+  content-background-color: transparent,
+  container-shape: 0,
+));
 
 html, body {
   margin: 0;
@@ -18,20 +119,72 @@ html, body {
 }
 
 body {
-  font-family: Roboto, 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background: var(--mat-sys-surface);
+  font-family: $font-stack;
+  font-size: var(--app-text-body);
+  line-height: var(--app-line-body);
+  background: var(--app-bg);
+  color: var(--mat-sys-on-surface);
+}
+
+// Shared recipes. The card and pill looks each appear in three or four
+// components, so they live here rather than being re-typed per component.
+.surface-card {
+  background: var(--app-card);
+  border-radius: var(--app-radius-card);
+  box-shadow: var(--mat-sys-level1);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--app-space-1);
+  padding: 2px 10px;
+  border-radius: var(--app-radius-pill);
+  font-size: var(--app-text-meta);
+  font-weight: var(--app-weight-medium);
+  line-height: 1.6;
+  white-space: nowrap;
+  color: var(--mat-sys-on-surface-variant);
+  background: var(--app-hover);
+
+  &.accent {
+    color: var(--mat-sys-on-primary-container);
+    background: var(--mat-sys-primary-container);
+  }
+
+  &.good {
+    color: var(--app-conf-hi);
+    background: var(--app-conf-hi-container);
+  }
+
+  &.caution {
+    color: var(--app-conf-mid);
+    background: var(--app-conf-mid-container);
+  }
+
+  &.bad {
+    color: var(--app-conf-lo);
+    background: var(--app-conf-lo-container);
+  }
+}
+
+.section-title {
+  margin: 0;
+  font-size: var(--app-text-heading);
+  font-weight: var(--app-weight-strong);
+  line-height: var(--app-line-tight);
   color: var(--mat-sys-on-surface);
 }
 
 // Shared skeleton shimmer, used by the list and AI panes.
 .skeleton {
   display: block;
-  border-radius: 6px;
+  border-radius: var(--mat-sys-corner-small);
   background: linear-gradient(
     90deg,
-    var(--mat-sys-surface-container-high) 25%,
+    var(--app-hover) 25%,
     var(--mat-sys-surface-container) 50%,
-    var(--mat-sys-surface-container-high) 75%
+    var(--app-hover) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;

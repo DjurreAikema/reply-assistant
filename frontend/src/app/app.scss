@@ -1,50 +1,78 @@
 :host {
   display: flex;
-  flex-direction: column;
   height: 100vh;
+  min-height: 0;
 }
 
-.topbar {
+// The rail is page chrome, so it sits directly on the tinted background
+// rather than floating as a card of its own.
+.rail {
   flex: none;
-  gap: 12px;
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  width: 76px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--app-space-2);
+  padding: var(--app-space-5) var(--app-space-1);
+  box-sizing: border-box;
 }
 
 .brand {
-  font-weight: 700;
-}
-
-.tagline {
-  font-size: 13px;
-  font-weight: 400;
+  width: 40px;
+  height: 40px;
+  margin-bottom: var(--app-space-4);
+  display: grid;
+  place-items: center;
+  border-radius: var(--app-radius-input);
+  font-size: var(--app-text-body);
+  font-weight: var(--app-weight-strong);
   color: var(--mat-sys-on-surface-variant);
+  background: var(--app-hover);
 }
 
-.spacer {
-  flex: 1;
-}
-
-.nav {
+.rail a {
+  width: 68px;
+  padding: var(--app-space-2) 0;
   display: flex;
-  gap: 4px;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--app-space-1);
+  border-radius: var(--app-radius-input);
+  text-decoration: none;
+  font-size: var(--app-text-meta);
+  font-weight: var(--app-weight-medium);
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--mat-sys-on-surface-variant);
 
-  a {
-    padding: 6px 14px;
-    border-radius: 999px;
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-    color: var(--mat-sys-on-surface-variant);
-
-    &:hover {
-      background: var(--mat-sys-surface-container-high);
-    }
-
-    &.active {
-      color: var(--mat-sys-on-secondary-container);
-      background: var(--mat-sys-secondary-container);
-    }
+  svg {
+    width: 22px;
+    height: 22px;
   }
+
+  &:hover {
+    background: var(--app-hover);
+  }
+
+  // One of the two places the accent is allowed, the other being the
+  // send button.
+  &.active {
+    color: var(--mat-sys-on-primary-container);
+    background: var(--mat-sys-primary-container);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 // The routed page fills the rest of the viewport; each page manages its

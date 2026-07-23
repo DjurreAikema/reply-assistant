@@ -1,11 +1,28 @@
-<mat-toolbar class="topbar">
-  <span class="brand">Reply Assistant</span>
-  <span class="tagline">Package delivery support</span>
-  <span class="spacer"></span>
-  <nav class="nav" aria-label="Pages">
-    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inbox</a>
-    <a routerLink="/templates" routerLinkActive="active">Templates</a>
-  </nav>
-</mat-toolbar>
+<!-- Icons are inline SVG rather than mat-icon: the Material Icons font is
+     a CDN dependency and the app has to work fully offline. -->
+<nav class="rail" aria-label="Pages">
+  <span class="brand" title="Reply Assistant" aria-label="Reply Assistant">RA</span>
 
-<router-outlet />
+  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 14h4l1.5 2.5h5L16 14h4" />
+      <path d="M4 14 6.6 5.6A2 2 0 0 1 8.5 4.2h7a2 2 0 0 1 1.9 1.4L20 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" />
+    </svg>
+    <span>Inbox</span>
+  </a>
+
+  <a routerLink="/templates" routerLinkActive="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M14 3.2H7.5a2 2 0 0 0-2 2v13.6a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V8z" />
+      <path d="M13.8 3.4V8h4.6" />
+      <path d="M9 13h6M9 16.5h4" />
+    </svg>
+    <span>Templates</span>
+  </a>
+</nav>
+
+<div class="content">
+  <router-outlet />
+</div>

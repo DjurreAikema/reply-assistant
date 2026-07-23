@@ -26,7 +26,8 @@ Notes on what moves:
 - The review panel leaves the centre pane. It now sits under the template suggestions in the AI column, next to the draft it feeds rather than under the email it came from. Everything the agent has to check before sending is then in the right half of the screen, in reading order: which template, which values, what gets sent.
 - The draft leaves the reply workspace's suggestion column and becomes its own column. That is the whole reason for the split, the draft needs room once a thread has several turns.
 - The AI column's two halves each scroll independently. Suggestions do not push the review panel off screen.
-- Below roughly 1400px, collapse the AI column and the draft column into a single right column with the draft on top. Below roughly 1000px, the inbox becomes a drawer. Never let a column go below a usable width by squeezing rather than collapsing.
+- Below 1720px, collapse the AI column and the draft column into a single right column with the draft on top. Below 1350px, the inbox becomes a drawer. Never let a column go below a usable width by squeezing rather than collapsing.
+- Those two numbers were first drawn at 1400 and 1000, before the columns were measured. All four columns are only visible at 1720px and up. At 1512px, which is where the demo runs, the layout is three columns: inbox, conversation, and a combined reply column with the draft on top. That is the fold working as intended, not a regression. The draft is 440px wide there against 420px in the four column layout, because the fold exists to stop the draft being squeezed. Fixed overhead is 482px of rail, drawer and gutters, so the conversation column gets `viewport - 482 - 776` at four columns and `viewport - 482 - 440` once folded.
 
 ## Visual style
 

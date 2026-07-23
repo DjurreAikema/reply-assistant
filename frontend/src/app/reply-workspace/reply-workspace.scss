@@ -3,7 +3,8 @@
 // one component's host rather than two siblings in the page grid.
 :host {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: 340px minmax(380px, 1fr);
+  gap: var(--app-space-4);
   height: 100%;
   min-height: 0;
 }
@@ -43,10 +44,10 @@
   min-height: 0;
 }
 
-@media (max-width: 1400px) {
+@media (max-width: 1720px) {
   :host {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: minmax(200px, auto) minmax(0, 1fr);
+    grid-template-rows: minmax(220px, auto) minmax(0, 1fr);
   }
 
   // Draft on top once the two columns become one.
