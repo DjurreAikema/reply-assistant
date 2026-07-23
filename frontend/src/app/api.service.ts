@@ -2,7 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Message, SentItem, SuggestResponse, Template, TemplateInput } from './models';
+import {
+  Conversation,
+  ConversationItem,
+  Message,
+  SentItem,
+  SuggestResponse,
+  Template,
+  TemplateInput,
+} from './models';
 
 // All URLs are relative. In dev the Angular proxy forwards /api to Flask
 // on port 5000 (see proxy.conf.json), which also avoids CORS entirely.
@@ -16,6 +24,14 @@ export class ApiService {
 
   getMessage(id: string): Observable<Message> {
     return this.http.get<Message>(`/api/messages/${id}`);
+  }
+
+  getConversations(): Observable<Conversation[]> {
+    return this.http.get<Conversation[]>('/api/conversations');
+  }
+
+  getConversation(id: string): Observable<ConversationItem[]> {
+    return this.http.get<ConversationItem[]>(`/api/conversations/${id}`);
   }
 
   getTemplates(): Observable<Template[]> {

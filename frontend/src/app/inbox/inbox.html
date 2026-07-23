@@ -1,28 +1,29 @@
-<main class="panes">
-  <section class="pane pane-list" aria-label="Inbox">
-    <app-message-list
-      [messages]="messages()"
-      [selectedId]="selected()?.id ?? null"
+<mat-sidenav-container class="shell" [hasBackdrop]="drawerMode() === 'over'">
+  <mat-sidenav
+    class="drawer"
+    [mode]="drawerMode()"
+    [opened]="drawerOpen()"
+    (closedStart)="drawerOpen.set(false)"
+  >
+    <app-conversation-list
+      [conversations]="conversations()"
+      [selectedId]="selectedId()"
       (select)="onSelect($event)"
     />
-  </section>
+  </mat-sidenav>
 
-  <section class="pane pane-detail" aria-label="Selected email">
-    <app-message-detail
-      [message]="selected()"
-      [fields]="fields()"
-      [requiredKeys]="requiredKeys()"
-      (fieldChange)="onFieldEdit($event)"
-    />
-  </section>
+  <mat-sidenav-content class="content">
+    <main class="panes">
+      <section class="pane pane-thread" aria-label="Conversation">
+        @if (drawerMode() === 'over') {
+          <button matButton class="drawer-toggle" (click)="drawerOpen.set(true)">
+            &#9776; Inbox
+          </button>
+        }
+        <app-conversation-thread [items]="thread()" [justSentId]="justSentId()" />
+      </section>
 
-  <section class="pane pane-ai" aria-label="AI reply suggestions">
-    <app-ai-panel
-      [message]="selected()"
-      [fields]="fields()"
-      (fieldsChange)="onFields($event)"
-      (requiredKeysChange)="onRequiredKeys($event)"
-      (replied)="onReplied($event)"
-    />
-  </section>
-</main>
+      <app-reply-workspace [message]="selected()" (replied)="onReplied($event)" />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

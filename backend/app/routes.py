@@ -2,7 +2,12 @@ from flask import Blueprint, current_app, jsonify, request
 
 from .llm import StructuredOutputError
 from .services.assist import draft_reply, suggest_templates
-from .services.mail_service import MessageNotFound, TemplateInUse, TemplateNotFound
+from .services.mail_service import (
+    ConversationNotFound,
+    MessageNotFound,
+    TemplateInUse,
+    TemplateNotFound,
+)
 
 api = Blueprint("api", __name__, url_prefix="/api")
 
@@ -18,6 +23,11 @@ def _provider():
 @api.errorhandler(MessageNotFound)
 def _not_found(exc):
     return jsonify({"error": f"No message with id {exc.args[0]}"}), 404
+
+
+@api.errorhandler(ConversationNotFound)
+def _conversation_not_found(exc):
+    return jsonify({"error": f"No conversation with id {exc.args[0]}"}), 404
 
 
 @api.errorhandler(StructuredOutputError)
@@ -46,6 +56,16 @@ def list_messages():
 @api.get("/messages/<message_id>")
 def get_message(message_id: str):
     return jsonify(_mail().get_message(message_id))
+
+
+@api.get("/conversations")
+def list_conversations():
+    return jsonify(_mail().list_conversations())
+
+
+@api.get("/conversations/<conversation_id>")
+def get_conversation(conversation_id: str):
+    return jsonify(_mail().get_conversation(conversation_id))
 
 
 @api.get("/templates")

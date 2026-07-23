@@ -1,7 +1,59 @@
+// The host is the right half of the page: the AI column and the draft
+// column. They collapse into one column together, which is why they are
+// one component's host rather than two siblings in the page grid.
 :host {
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   height: 100%;
+  min-height: 0;
+}
+
+.col {
+  min-width: 0;
+  min-height: 0;
+  border-left: 1px solid var(--mat-sys-outline-variant);
+}
+
+.col-ai {
+  display: flex;
+  flex-direction: column;
+  background: var(--mat-sys-surface-container-low);
+}
+
+// Each half scrolls on its own so a long candidate list cannot push the
+// review panel off screen.
+.half {
+  min-height: 0;
   overflow-y: auto;
+}
+
+.half-suggestions {
+  flex: 0 1 auto;
+  max-height: 55%;
+}
+
+.half-review {
+  flex: 1 1 auto;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}
+
+.col-draft {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+@media (max-width: 1400px) {
+  :host {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(200px, auto) minmax(0, 1fr);
+  }
+
+  // Draft on top once the two columns become one.
+  .col-draft {
+    order: -1;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+  }
 }
 
 .panel {
@@ -76,20 +128,18 @@
 }
 
 .draft-area {
+  flex: 1;
+  min-height: 0;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 
-  h3 {
-    margin: 8px 0 0;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--mat-sys-on-surface-variant);
-  }
-
   textarea {
+    // The draft column exists to give the draft room, so the textarea
+    // takes the height rather than a fixed row count.
+    flex: 1;
+    min-height: 180px;
     width: 100%;
     box-sizing: border-box;
     padding: 12px;
@@ -100,7 +150,7 @@
     font: inherit;
     font-size: 13px;
     line-height: 1.5;
-    resize: vertical;
+    resize: none;
 
     &:focus-visible {
       outline: 2px solid var(--mat-sys-primary);
@@ -155,39 +205,6 @@
 .skeleton-card {
   cursor: default;
   gap: 10px;
-}
-
-.sent-state {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  text-align: center;
-  padding: 24px;
-
-  .check {
-    width: 48px;
-    height: 48px;
-    display: grid;
-    place-items: center;
-    font-size: 26px;
-    border-radius: 50%;
-    color: var(--mat-sys-on-tertiary-container);
-    background: var(--mat-sys-tertiary-container);
-  }
-
-  h2 {
-    margin: 8px 0 0;
-    font-size: 18px;
-  }
-
-  p {
-    margin: 0;
-    font-size: 13px;
-    color: var(--mat-sys-on-surface-variant);
-  }
 }
 
 .empty {

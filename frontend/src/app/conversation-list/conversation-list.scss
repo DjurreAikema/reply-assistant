@@ -99,20 +99,32 @@
   white-space: nowrap;
 }
 
-.replied .sender,
-.replied .subject {
-  color: var(--mat-sys-on-surface-variant);
-}
-
-.replied-badge {
+.marks {
   flex: none;
   align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+// Turn count, shown only once a thread has more than one item.
+.count {
   font-size: 11px;
   font-weight: 600;
-  padding: 2px 8px;
+  padding: 1px 7px;
   border-radius: 10px;
-  color: var(--mat-sys-on-tertiary-container);
-  background: var(--mat-sys-tertiary-container);
+  color: var(--mat-sys-on-surface-variant);
+  background: var(--mat-sys-surface-container-high);
+  font-variant-numeric: tabular-nums;
+}
+
+// Derived from the last item being inbound, not from isReplied.
+.awaiting {
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .skeleton-row {

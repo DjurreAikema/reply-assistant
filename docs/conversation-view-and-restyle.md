@@ -24,7 +24,7 @@ Four columns, left to right:
 Notes on what moves:
 
 - The review panel leaves the centre pane. It now sits under the template suggestions in the AI column, next to the draft it feeds rather than under the email it came from. Everything the agent has to check before sending is then in the right half of the screen, in reading order: which template, which values, what gets sent.
-- The draft leaves the AI panel and becomes its own column. That is the whole reason for the split, the draft needs room once a thread has several turns.
+- The draft leaves the reply workspace's suggestion column and becomes its own column. That is the whole reason for the split, the draft needs room once a thread has several turns.
 - The AI column's two halves each scroll independently. Suggestions do not push the review panel off screen.
 - Below roughly 1400px, collapse the AI column and the draft column into a single right column with the draft on top. Below roughly 1000px, the inbox becomes a drawer. Never let a column go below a usable width by squeezing rather than collapsing.
 
@@ -61,7 +61,7 @@ Data:
 
 Endpoints:
 
-- `GET /api/conversations` returns the thread list for the inbox: id, subject, participant, last message preview, last timestamp, message count, and whether the last item is inbound.
+- `GET /api/conversations` returns the thread list for the inbox: id, subject, participant, last message preview, last timestamp, message count, whether the last item is inbound, and read state. Read state is false if any inbound message in the thread is unread, and it is separate from whether the last item is inbound: one drives the unread styling, the other drives the waiting on reply affordance.
 - `GET /api/conversations/<id>` returns the ordered items in one thread.
 - Existing message endpoints stay for now. Sending stays `POST /api/messages/<id>/send`, appending to the thread as it already does.
 - All of it goes through `MailService`. Add the methods to the abstract base and to `JsonMailService`, keeping the existing lock discipline around every read, modify, write.

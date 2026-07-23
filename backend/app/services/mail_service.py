@@ -27,6 +27,10 @@ class TemplateInUse(RuntimeError):
     pass
 
 
+class ConversationNotFound(KeyError):
+    pass
+
+
 _PLACEHOLDER_RE = re.compile(r"\{\{\s*(\w+)\s*\}\}")
 
 
@@ -40,12 +44,35 @@ def parse_placeholders(body: str) -> list[str]:
     return seen
 
 
+def _instant(value: str) -> datetime:
+    """Inbound timestamps are Graph style with a Z suffix, outbound ones
+    come from isoformat() with a +00:00 offset. Sorting the raw strings
+    would interleave a thread wrongly, so parse before comparing."""
+    parsed = datetime.fromisoformat(value)
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=timezone.utc)
+    return parsed
+
+
+def _preview(text: str, limit: int = 140) -> str:
+    flat = " ".join(text.split())
+    if len(flat) <= limit:
+        return flat
+    return flat[: limit - 1].rstrip() + "…"
+
+
 class MailService(ABC):
     @abstractmethod
     def list_messages(self) -> list[dict]: ...
 
     @abstractmethod
     def get_message(self, message_id: str) -> dict: ...
+
+    @abstractmethod
+    def list_conversations(self) -> list[dict]: ...
+
+    @abstractmethod
+    def get_conversation(self, conversation_id: str) -> list[dict]: ...
 
     @abstractmethod
     def list_templates(self) -> list[dict]: ...
@@ -99,6 +126,61 @@ class JsonMailService(MailService):
                 if message["id"] == message_id:
                     return message
         raise MessageNotFound(message_id)
+
+    def _threads(self, messages: list[dict], sent: list[dict]) -> dict[str, list[dict]]:
+        """Group inbound and outbound into ordered threads. direction and
+        timestamp are added so callers never have to know which of the two
+        source shapes an item came from."""
+        threads: dict[str, list[dict]] = {}
+        for message in messages:
+            item = {**message, "direction": "inbound", "timestamp": message["receivedDateTime"]}
+            threads.setdefault(message["conversationId"], []).append(item)
+        for sent_item in sent:
+            item = {**sent_item, "direction": "outbound", "timestamp": sent_item["sentDateTime"]}
+            threads.setdefault(sent_item["conversationId"], []).append(item)
+        for items in threads.values():
+            items.sort(key=lambda i: _instant(i["timestamp"]))
+        return threads
+
+    def _summarise(self, conversation_id: str, items: list[dict]) -> dict:
+        last = items[-1]
+        opener = next((i for i in items if i["direction"] == "inbound"), last)
+        participant = (
+            opener["from"]["emailAddress"]
+            if opener["direction"] == "inbound"
+            else opener["to"]["emailAddress"]
+        )
+        return {
+            "id": conversation_id,
+            "subject": opener["subject"],
+            "participant": participant,
+            "lastPreview": _preview(last["body"]["content"]),
+            "lastTimestamp": last["timestamp"],
+            "messageCount": len(items),
+            "lastIsInbound": last["direction"] == "inbound",
+            # A thread is unread while any inbound message in it is, not
+            # just the newest one.
+            "isRead": all(
+                i.get("isRead", True) for i in items if i["direction"] == "inbound"
+            ),
+        }
+
+    def list_conversations(self) -> list[dict]:
+        with self._lock:
+            messages = self._read(self.messages_path)
+            sent = self._read(self.sent_path)
+        threads = self._threads(messages, sent)
+        summaries = [self._summarise(cid, items) for cid, items in threads.items()]
+        return sorted(summaries, key=lambda s: _instant(s["lastTimestamp"]), reverse=True)
+
+    def get_conversation(self, conversation_id: str) -> list[dict]:
+        with self._lock:
+            messages = self._read(self.messages_path)
+            sent = self._read(self.sent_path)
+        items = self._threads(messages, sent).get(conversation_id)
+        if not items:
+            raise ConversationNotFound(conversation_id)
+        return items
 
     def list_templates(self) -> list[dict]:
         with self._lock:
